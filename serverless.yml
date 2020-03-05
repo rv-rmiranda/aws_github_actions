@@ -2,7 +2,7 @@
 #    docs.serverless.com
 #    https://serverless.com/framework/docs/providers/aws/guide/serverless.yml/#serverlessyml-reference
 
-service: serverless_aws_github_actions
+service: serverless-aws-github-actions
 
 provider:
   name: aws
