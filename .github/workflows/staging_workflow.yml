@@ -1,5 +1,5 @@
 
-name: Main workflow
+name: Staging workflow
 
 on:
   push:
