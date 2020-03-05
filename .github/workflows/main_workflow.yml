@@ -19,16 +19,16 @@ jobs:
 
     steps:
 
+    - name: Branch Name
+      run: echo Running on branch ${GITHUB_REF##*/}
+
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_SANDBOX }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_SANDBOX }}
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_${GITHUB_REF##*/} }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_${GITHUB_REF##*/} }}
         aws-region: us-east-1
-
-    - name: Branch Name
-      run: echo Running on branch ${GITHUB_REF##*/}
-        
+       
     - uses: actions/checkout@v2
     - name: Set up Python ${{ matrix.python_version }}
       uses: actions/setup-python@v1
@@ -53,12 +53,10 @@ jobs:
     - name: Serverless Deploy
       run: |
         if [[ ${GITHUB_REF##*/} = "master" ]]; then
-          serverless config credentials --provider aws --key $AWS_ACCESS_KEY_ID_SANDBOX --secret $AWS_SECRET_ACCESS_KEY_SANDBOX --stage prod
-          ./scripts/deploy.sh prod
+          serverless deploy --stage dev --verbose --conceal
+
         elif [[ ${GITHUB_REF##*/} = "staging" ]]; then
-          serverless config credentials --provider aws --key $AWS_ACCESS_KEY_ID_STAGING --secret $AWS_SECRET_ACCESS_KEY_STAGING --stage dev
-          ./scripts/deploy.sh dev
+          serverless deploy --stage dev2 --verbose --conceal
         fi
 
-        serverless deploy --stage test --verbose --conceal
 
