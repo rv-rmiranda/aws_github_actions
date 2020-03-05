@@ -51,14 +51,4 @@ jobs:
         npm install
 
     - name: Serverless Deploy
-      run: |
-
-        serverless deploy --stage test --verbose --conceal
-
-        # if [[ ${GITHUB_REF##*/} = "master" ]]; then
-        #   serverless config credentials --provider aws --key $AWS_ACCESS_KEY_ID_SANDBOX --secret $AWS_SECRET_ACCESS_KEY_SANDBOX --stage prod
-        #   ./scripts/deploy.sh prod
-        # elif [[ ${GITHUB_REF##*/} = "staging" ]]; then
-        #   serverless config credentials --provider aws --key $AWS_ACCESS_KEY_ID_STAGING --secret $AWS_SECRET_ACCESS_KEY_STAGING --stage dev
-        #   ./scripts/deploy.sh dev
-        # fi
+      run: serverless deploy --stage test --verbose --conceal
