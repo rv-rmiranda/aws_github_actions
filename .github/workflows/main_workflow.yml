@@ -1,5 +1,5 @@
 
-name: Main workflow
+name: Master workflow
 
 on:
   push:
