@@ -20,7 +20,7 @@ jobs:
     steps:
 
     - name: Branch Name
-      run: echo Branch ${GITHUB_HEAD_REF}  #${GITHUB_REF##*/}
+      run: echo Branch  ${GITHUB_REF##*/} # ${GITHUB_HEAD_REF}
         
     - uses: actions/checkout@v2
     - name: Set up Python ${{ matrix.python_version }}
@@ -46,7 +46,7 @@ jobs:
     - name: Serverless Deploy
       run: |
             if [[ $GITHUB_HEAD_REF = "master" ]]; then
-              serverless config credentials --provider aws --key $AWS_ACCESS_KEY_ID_PRODUCTION --secret $AWS_SECRET_ACCESS_KEY_PRODUCTION --stage prod
+              serverless config credentials --provider aws --key $AWS_ACCESS_KEY_ID_SANDBOX --secret $AWS_SECRET_ACCESS_KEY_SANDBOX --stage prod
               ./scripts/deploy.sh prod
             elif [[ $GITHUB_HEAD_REF = "staging" ]]; then
               serverless config credentials --provider aws --key $AWS_ACCESS_KEY_ID_STAGING --secret $AWS_SECRET_ACCESS_KEY_STAGING --stage dev
@@ -54,3 +54,11 @@ jobs:
             fi
 
             serverless deploy --stage test --verbose --conceal
+
+
+      # - name: Configure AWS credentials
+      # uses: aws-actions/configure-aws-credentials@v1
+      # with:
+      # aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_SANDBOX }}
+      # aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_SANDBOX }}
+      # aws-region: us-east-1
