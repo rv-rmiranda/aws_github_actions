@@ -1,33 +1,54 @@
-# This is a basic workflow to help you get started with Actions
 
-name: CI
+name: Main workflow
 
-# Controls when the action will run. Triggers the workflow on push or pull request 
-# events but only for the master branch
 on:
   push:
     branches: [ master ]
   pull_request:
     branches: [ master ]
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
   build:
-    # The type of runner that the job will run on
+
+    strategy:
+      matrix:
+        node_version: [12.x]
+        python_version: [3.8.x]
+
     runs-on: ubuntu-latest
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+
+    - name: Branch Name
+      run: echo Branch $GITHUB_HEAD_REF #${GITHUB_REF##*/}
+        
     - uses: actions/checkout@v2
+    - name: Set up Python ${{ matrix.python_version }}
+      uses: actions/setup-python@v1
+      with:
+        python-version: ${{ matrix.python_version }}
 
-    # Runs a single command using the runners shell
-    - name: Run a one-line script
-      run: echo Hello, world!
+    - name: Install Python Requirements
+      run: ./scripts/installDeps.sh
 
-    # Runs a set of commands using the runners shell
-    - name: Run a multi-line script
+    - name: Use Node.js ${{ matrix.node_version }}
+      uses: actions/setup-node@v1
+      with:
+        version: ${{ matrix.node_version }}
+
+    - name: Install NPM Packages
       run: |
-        echo Add other actions to build,
-        echo test, and deploy your project.
+        npm install i -g serverless
+        npm install
+
+    - name: Serverless Deploy
+      run: |
+            if [[ $GITHUB_HEAD_REF = "master" ]]; then
+              serverless config credentials --provider aws --key $AWS_ACCESS_KEY_ID_PRODUCTION --secret $AWS_SECRET_ACCESS_KEY_PRODUCTION --stage prod
+              ./scripts/deploy.sh prod
+            elif [[ $GITHUB_HEAD_REF = "staging" ]]; then
+              serverless config credentials --provider aws --key $AWS_ACCESS_KEY_ID_STAGING --secret $AWS_SECRET_ACCESS_KEY_STAGING --stage dev
+              ./scripts/deploy.sh dev
+            fi
+
+            serverless deploy --stage test --verbose --conceal
