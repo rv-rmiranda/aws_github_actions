@@ -39,9 +39,9 @@ jobs:
         python-version: ${{ matrix.python_version }}
 
     - name: Use Node.js ${{ matrix.node_version }}
-          uses: actions/setup-node@v1
-          with:
-            version: ${{ matrix.node_version }}
+      uses: actions/setup-node@v1
+      with:
+        version: ${{ matrix.node_version }}
 
     - name: Install NPM Packages
       run: |
