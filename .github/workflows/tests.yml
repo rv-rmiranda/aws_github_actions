@@ -31,7 +31,9 @@ jobs:
         version: ${{ matrix.node_version }}
 
     - name: Install NPM Packages
-      run: npm install -g aws-cdk
+      run: |
+        sudo npm install -g aws-cdk
+        cdk --version
 
     - uses: actions/checkout@v2
     - name: Set up Python ${{ matrix.python_version }}
