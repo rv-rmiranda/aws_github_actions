@@ -49,5 +49,8 @@ jobs:
         source .env/bin/activate
         pip3 install -r requirements.txt
 
+        cdk synth cdk-test
+        cdk synth cdk-api
+
         pytest
     
