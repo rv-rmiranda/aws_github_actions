@@ -20,10 +20,7 @@ jobs:
     steps:
 
     - name: Install AWS CLI
-      run: |
-        curl "https://s3.amazonaws.com/aws-cli/awscli-bundle.zip" -o "awscli-bundle.zip"
-        unzip awscli-bundle.zip
-        sudo ./awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws
+      run: sudo apt-get install awscli
 
     - name: Use Node.js ${{ matrix.node_version }}
       uses: actions/setup-node@v1
