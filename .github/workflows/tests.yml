@@ -49,8 +49,11 @@ jobs:
         source .env/bin/activate
         pip3 install -r requirements.txt
 
+        cdk synth cdk-test
+        cdk synth cdk-api
+
         pytest
-    
+
     # - name: Lint with flake8
     #   run: |
     #     pip install flake8
@@ -59,7 +62,3 @@ jobs:
     #     # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
     #     flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     
-    # - name: Run Tests
-    #   run: |
-    #     pip3 install pytest
-    #     pytest
