@@ -7,8 +7,8 @@ from cdk_apigateway.cdk_api_stack import CdkAPIGatewayStack
 
 def get_template():
     app = core.App()
-    func = CdkLambdaStack(app, "cdk-test")
-    CdkAPIGatewayStack(app, "cdk-api", _handler=func.hello)
+    func = CdkLambdaStack(app, "cdk-lambda")
+    CdkAPIGatewayStack(app, "cdk-api", _handler=func.lambdaEdge)
 
     api_template = app.synth().get_stack("cdk-api").template
 

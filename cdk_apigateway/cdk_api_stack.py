@@ -10,5 +10,6 @@ class CdkAPIGatewayStack(core.Stack):
 
         self.api = api.LambdaRestApi(self, "cdk-api",
             handler = _handler,
-            proxy   = True
+            proxy   = True,
+            rest_api_name = "CDK-API-Test"
         )

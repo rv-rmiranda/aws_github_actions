@@ -28,12 +28,15 @@ app = core.App()
 # Creating a Stack for Lambdas:
 functions = CdkLambdaStack(
     scope = app, 
-    id    = "cdk-test", 
+    id    = "cdk-lambda", 
     env   = {
         'region': 'us-east-1',
-        'account': 'ID'
+        'account': '065035205697'
         }
 )
+
+functions.auto.grant_invoke(functions.lambdaEdge)
+functions.home.grant_invoke(functions.lambdaEdge)
 
 # Creating a Stack API Gateway:
 api = CdkAPIGatewayStack(
@@ -41,16 +44,19 @@ api = CdkAPIGatewayStack(
     id    = "cdk-api", 
     env   = {
         'region': 'us-east-1',
-        'account': 'ID'
+        'account': '065035205697'
         },
-    _handler = functions.hello
+    _handler = functions.lambdaEdge
 )
+
+
 
 
 # Adding Tags to Resources:
 for tag, value in tags.items():
-    core.Tag.add(functions.hello, tag, value)
-    core.Tag.add(functions.hello2, tag, value)
+    core.Tag.add(functions.lambdaEdge, tag, value)
+    core.Tag.add(functions.auto, tag, value)
+    core.Tag.add(functions.home, tag, value)
     core.Tag.add(api.api, tag, value)
 
 app.synth()

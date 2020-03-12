@@ -1,7 +1,7 @@
 from aws_cdk import (
     core,
     aws_lambda,
-    aws_apigateway as api
+
 )
 
 class CdkLambdaStack(core.Stack):
@@ -9,21 +9,32 @@ class CdkLambdaStack(core.Stack):
     def __init__(self, scope: core.Construct, id: str, **kwargs) -> None:
         super().__init__(scope, id, **kwargs)
 
-        self.hello = aws_lambda.Function(
-            self, "HelloHandler",
+        self.lambdaEdge = aws_lambda.Function(
+            self, "EdgeHandler",
             runtime     = aws_lambda.Runtime.PYTHON_3_8,
             code        = aws_lambda.Code.asset('lambda'),
-            handler     = "hello.handler",
+            handler     = "lambda_edge.handler",
+            timeout     = core.Duration.seconds(900),
             memory_size = 1024,
             environment = {
                 "PATH": "./"
             }
         )
 
-        self.hello2 = aws_lambda.Function(
-            self, "HelloHandler2",
-            runtime = aws_lambda.Runtime.PYTHON_3_8,
-            code    = aws_lambda.Code.asset('lambda'),
-            handler = "hello2.handler",
-            memory_size= 1024
+        self.auto = aws_lambda.Function(
+            self, "AutoHandler",
+            runtime    = aws_lambda.Runtime.PYTHON_3_8,
+            code       = aws_lambda.Code.asset('lambda'),
+            handler    = "auto.handler",
+            timeout    = core.Duration.seconds(900),
+            memory_size = 1024
+        )
+
+        self.home = aws_lambda.Function(
+            self, "HomeHandler",
+            runtime     = aws_lambda.Runtime.PYTHON_3_8,
+            code        = aws_lambda.Code.asset('lambda'),
+            handler     = "home.handler",
+            timeout     = core.Duration.seconds(900),
+            memory_size = 1024
         )
