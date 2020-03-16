@@ -13,7 +13,7 @@ jobs:
     strategy:
       matrix:
         node_version: [12.x]
-        python_version: [3.8.x]
+        python_version: [3.7.x, 3.8.x]
 
     runs-on: ubuntu-latest
 
