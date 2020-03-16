@@ -2,6 +2,7 @@
 Documentation:
 https://docs.aws.amazon.com/cdk/api/latest/python/aws_cdk.aws_elasticsearch/CfnDomain.html
 https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticsearch-domain.html#cfn-elasticsearch-domain-vpcoptions
+https://docs.aws.amazon.com/elasticsearch-service/latest/developerguide/es-managedomains-dedicatedmasternodes.html
 """
 
 from aws_cdk import (
@@ -38,7 +39,7 @@ class CdkElasticSearchStack(core.Stack):
             },
             elasticsearch_cluster_config = ES.CfnDomain.ElasticsearchClusterConfigProperty(
                 dedicated_master_enabled = True, # NOTE: Change to True in Production
-                dedicated_master_count   = 2,
+                dedicated_master_count   = 3, # Even numbers of dedicated masters are not recommended.
                 dedicated_master_type    = "t2.small.elasticsearch",
                 instance_count           = 1,
                 instance_type            = "t2.small.elasticsearch",

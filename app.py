@@ -35,9 +35,6 @@ functions = CdkLambdaStack(
         }
 )
 
-functions.auto.grant_invoke(functions.lambdaEdge)
-functions.home.grant_invoke(functions.lambdaEdge)
-
 # Creating a Stack for API Gateway:
 api = CdkAPIGatewayStack(
     scope = app, 
@@ -59,6 +56,10 @@ es = CdkElasticSearchStack(
     }
 )
 
+# Granting Permissions:
+functions.auto.grant_invoke(functions.lambdaEdge)
+functions.home.grant_invoke(functions.lambdaEdge)
+# functions.lambdaEdge.add_permission()
 
 # Adding Tags to Resources:
 for tag, value in tags.items():
@@ -66,5 +67,6 @@ for tag, value in tags.items():
     core.Tag.add(functions.auto, tag, value)
     core.Tag.add(functions.home, tag, value)
     core.Tag.add(api.api, tag, value)
+    core.Tag.add(es.elasticSearch, tag, value)
 
 app.synth()

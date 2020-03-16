@@ -50,8 +50,6 @@ jobs:
         cdk synth cdk-api
         cdk synth cdk-elasticSearch
 
-        cdk diff
-
         pytest
 
     # - name: Lint with flake8
