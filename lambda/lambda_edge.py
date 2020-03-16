@@ -1,7 +1,7 @@
 import json
 import boto3
 
-def http_responce(status:int, body:str):
+def http_responce(status:int=400, body:str=""):
     try:
         return {
             'statusCode': status,
@@ -76,9 +76,7 @@ def handler(event, context):
 
         else:
             body = "ERROR: Path {0} not supported".format(path)
-            http_responce(400, body)
+            return http_responce(body=body)
 
-
-    
     except Exception as e:
-        http_responce(400, str(e))
+        http_responce(body=str(e))

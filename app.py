@@ -6,7 +6,7 @@ from aws_cdk import (
 
 from cdk_lambda.cdk_lambda_stack import CdkLambdaStack
 from cdk_apigateway.cdk_api_stack import CdkAPIGatewayStack
-
+from cdk_elasticsearch.cdk_elasticsearch_stack import CdkElasticSearchStack
 # Tagging resources
 # See https://github.com/RedVentures/cnn/blob/master/0001-tagging-aws-resources.md
 tags = {'AssetTag': 'n/a',
@@ -35,22 +35,31 @@ functions = CdkLambdaStack(
         }
 )
 
-functions.auto.grant_invoke(functions.lambdaEdge)
-functions.home.grant_invoke(functions.lambdaEdge)
-
-# Creating a Stack API Gateway:
+# Creating a Stack for API Gateway:
 api = CdkAPIGatewayStack(
     scope = app, 
     id    = "cdk-api", 
     env   = {
         'region': 'us-east-1',
         'account': '065035205697'
-        },
+    },
     _handler = functions.lambdaEdge
 )
 
+# Creating a Stack for Elastic Search:
+es = CdkElasticSearchStack(
+    scope = app,
+    id    = "cdk-elasticSearch",
+    env   = {
+        'region': 'us-east-1',
+        'account': '065035205697'
+    }
+)
 
-
+# Granting Permissions:
+functions.auto.grant_invoke(functions.lambdaEdge)
+functions.home.grant_invoke(functions.lambdaEdge)
+# functions.lambdaEdge.add_permission()
 
 # Adding Tags to Resources:
 for tag, value in tags.items():
@@ -58,5 +67,6 @@ for tag, value in tags.items():
     core.Tag.add(functions.auto, tag, value)
     core.Tag.add(functions.home, tag, value)
     core.Tag.add(api.api, tag, value)
+    core.Tag.add(es.elasticSearch, tag, value)
 
 app.synth()

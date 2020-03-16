@@ -64,3 +64,4 @@ jobs:
 
         cdk synth cdk-lambda
         cdk synth cdk-api
+        cdk synth cdk-elasticSearch
