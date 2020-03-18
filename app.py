@@ -1,14 +1,23 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3\
+
+"""
+Documentation:
+CDK:
+    - https://docs.aws.amazon.com/cdk/api/latest/python/modules.html
+Tagging resources
+    — https://github.com/RedVentures/cnn/blob/master/0001-tagging-aws-resources.md
+"""
 
 from aws_cdk import (
-    core
+    core,
+    aws_lambda as lam
 )
 
 from cdk_lambda.cdk_lambda_stack import CdkLambdaStack
 from cdk_apigateway.cdk_api_stack import CdkAPIGatewayStack
 from cdk_elasticsearch.cdk_elasticsearch_stack import CdkElasticSearchStack
-# Tagging resources
-# See https://github.com/RedVentures/cnn/blob/master/0001-tagging-aws-resources.md
+from cdk_elasticache.cdk_elasticache_stack import CdkElastiCasheStack
+
 tags = {'AssetTag': 'n/a',
         'Backup': 'n/a',
         'Classification': 'n/a',
@@ -31,7 +40,7 @@ functions = CdkLambdaStack(
     id    = "cdk-lambda", 
     env   = {
         'region': 'us-east-1',
-        'account': '065035205697'
+        'account': '960785399995'
         }
 )
 
@@ -41,32 +50,32 @@ api = CdkAPIGatewayStack(
     id    = "cdk-api", 
     env   = {
         'region': 'us-east-1',
-        'account': '065035205697'
+        'account': '960785399995'
     },
-    _handler = functions.lambdaEdge
+    _handler = functions.lambdaProxy
 )
 
-# Creating a Stack for Elastic Search:
-es = CdkElasticSearchStack(
+ec = CdkElastiCasheStack (
     scope = app,
-    id    = "cdk-elasticSearch",
+    id    = "cdk-memcached",
     env   = {
         'region': 'us-east-1',
-        'account': '065035205697'
+        'account': '960785399995'
     }
 )
 
 # Granting Permissions:
-functions.auto.grant_invoke(functions.lambdaEdge)
-functions.home.grant_invoke(functions.lambdaEdge)
-# functions.lambdaEdge.add_permission()
+functions.queryElasticache.grant_invoke(functions.lambdaProxy)
+functions.storeElasticache.grant_invoke(functions.lambdaProxy)
+functions.queryQuadrant.grant_invoke(functions.lambdaProxy)
 
 # Adding Tags to Resources:
 for tag, value in tags.items():
-    core.Tag.add(functions.lambdaEdge, tag, value)
-    core.Tag.add(functions.auto, tag, value)
-    core.Tag.add(functions.home, tag, value)
+    core.Tag.add(functions.lambdaProxy, tag, value)
+    core.Tag.add(functions.queryQuadrant, tag, value)
+    core.Tag.add(functions.queryElasticache, tag, value)
+    core.Tag.add(functions.storeElasticache, tag, value)
     core.Tag.add(api.api, tag, value)
-    core.Tag.add(es.elasticSearch, tag, value)
+    core.Tag.add(ec.elasticache, tag, value)
 
 app.synth()

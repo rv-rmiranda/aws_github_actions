@@ -33,7 +33,7 @@ class CdkElasticSearchStack(core.Stack):
                     "Action": [
                         "es:*"
                     ],
-                    "Resource": "arn:aws:es:us-east-1:065035205697:domain/cdk-test/*"
+                    "Resource": "arn:aws:es:us-east-1:065035205697:domain/cdk-elasticsearch/*"
                     }
                 ]
             },
