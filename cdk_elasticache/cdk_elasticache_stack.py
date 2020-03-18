@@ -1,19 +1,28 @@
-"""
-Documentation:
-https://docs.aws.amazon.com/lambda/latest/dg/services-elasticache-tutorial.html
-https://docs.aws.amazon.com/cdk/api/latest/python/aws_cdk.aws_elasticache/CfnCacheCluster.html
-https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-elasticache-cache-cluster.html#cfn-elasticache-cachecluster-engineversion
-"""
 
 from aws_cdk import (
     core,
     aws_elasticache as EC
 )
 
+# === CdkElastiCasheStack ===
+
 class CdkElastiCasheStack(core.Stack):
+
+    """
+    The CdkElastiCasheStack class define the infrastructure of the
+    Elasticache-Memcached to be deployed into the AWS accounts.
+
+    **Documentation:**
+
+    https://docs.aws.amazon.com/lambda/latest/dg/services-elasticache-tutorial.html
+    https://docs.aws.amazon.com/cdk/api/latest/python/aws_cdk.aws_elasticache/CfnCacheCluster.html
+    https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-elasticache-cache-cluster.html#cfn-elasticache-cachecluster-engineversion
+    """
 
     def __init__(self, scope: core.Construct, id: str, **kwargs) -> None:
         super().__init__(scope, id, **kwargs)
+
+        # === Elasticache-Memcached ===
 
         self.elasticache = EC.CfnCacheCluster (
             scope                        = self,

@@ -7,7 +7,7 @@ CDK:
 Tagging resources
     — https://github.com/RedVentures/cnn/blob/master/0001-tagging-aws-resources.md
 """
-
+import os
 from aws_cdk import (
     core,
     aws_lambda as lam
@@ -18,51 +18,49 @@ from cdk_apigateway.cdk_api_stack import CdkAPIGatewayStack
 from cdk_elasticsearch.cdk_elasticsearch_stack import CdkElasticSearchStack
 from cdk_elasticache.cdk_elasticache_stack import CdkElastiCasheStack
 
-tags = {'AssetTag': 'n/a',
-        'Backup': 'n/a',
-        'Classification': 'n/a',
-        'Environment': 'test',
-        'Expiration': 'n/a',
-        'Name': 'Forward787 CDK Test',
-        'Owner': 'Sancocho Team',
-        'Partner': 'n/a',
-        'Project': 'rv-forward787',
-        'Provisioner': 'AWS CDK',
-        'Service': 'Provision architecture for licensing tool thru AWS cdk.',
-        'Version': 'n/a'
-        }
+tags = {
+    'AssetTag': 'n/a',
+    'Backup': 'n/a',
+    'Classification': 'n/a',
+    'Environment': 'test',
+    'Expiration': 'n/a',
+    'Name': 'Forward787 CDK Test',
+    'Owner': 'Sancocho Team',
+    'Partner': 'n/a',
+    'Project': 'rv-forward787',
+    'Provisioner': 'AWS CDK',
+    'Service': 'Provision architecture for licensing tool thru AWS cdk.',
+    'Version': 'n/a'
+}
 
 app = core.App()
+__env = {
+    'region': os.environ['CDK_DEFAULT_REGION'],
+    'account': os.environ['CDK_DEFAULT_ACCOUNT']
+}
+# __stage = os.environ['STAGE']
 
 # Creating a Stack for Lambdas:
 functions = CdkLambdaStack(
     scope = app, 
     id    = "cdk-lambda", 
-    env   = {
-        'region': 'us-east-1',
-        'account': '960785399995'
-        }
+    env   = __env,
 )
 
 # Creating a Stack for API Gateway:
 api = CdkAPIGatewayStack(
     scope = app, 
     id    = "cdk-api", 
-    env   = {
-        'region': 'us-east-1',
-        'account': '960785399995'
-    },
+    env   = __env,
     _handler = functions.lambdaProxy
 )
 
 ec = CdkElastiCasheStack (
     scope = app,
     id    = "cdk-memcached",
-    env   = {
-        'region': 'us-east-1',
-        'account': '960785399995'
-    }
+    env   = __env
 )
+
 
 # Granting Permissions:
 functions.queryElasticache.grant_invoke(functions.lambdaProxy)

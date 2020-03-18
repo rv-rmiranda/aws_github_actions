@@ -1,5 +1,6 @@
 import json
 import boto3
+import hashlib
 
 #  Move 
 def http_responce(status:int=400, body:str=""):
@@ -28,8 +29,8 @@ def get_response(response):
         "body": payload['body']
     }
 
-def generate_hash(*args):
-    pass
+def generate_hash(keywords:dict):
+    return hashlib.sha1(json.dumps(keywords, sort_keys=True).encode()).hexdigest()
 
 # Local Functions:
 def invoke_lambda(arn:str, data:dict):
@@ -83,21 +84,28 @@ def handler(event, context):
         # Lambda Logs: 
         print(event)
 
+        if event["httpMethod"] != "POST":
+            return http_responce(body="HTTP Method {0} not supported".format(event["httpMethod"]))
+
         path = event['pathParameters']['proxy']
-        params = event['queryStringParameters']
+
+        if event['body']
+            params = json.loads(event['body'])
+        else:
+            return http_responce(body="Missing body in request")
 
         # TODO - Manage HTTP Request Routing 
 
         if path == 'auto':
             # TODO - Data Format
-            hash_hey = generate_hash()
+            hash_hey = generate_hash(params['args'])
             response = get_cached_data(hash_hey, params)
 
             if response['statusCode'] == 200:
                 # TODO - Data Format
                 return response
             else:
-                response = get_quadrant_data(params)
+                response = get_quadrant_data(params['args'])
                 if response['statusCode'] == 200:
                     # TODO - Data Format
                     return response

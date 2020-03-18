@@ -54,14 +54,16 @@ def handler(event, context):
         data_inserted = json.dumps(event['data'])
 
         # Storeing data into cache:
-        response = memcache_client.set('json', data_inserted)
-        print(response)
+        response = memcache_client.set(hashKey, data_inserted)
+        if response:
 
-        body = json.dumps({
-            'hashKey': hashKey
-        })
+            body = json.dumps ({
+                'hashKey': hashKey
+            })
 
-        return http_responce(200, body)
+            return http_responce(200, body)
+        else:
+            return http_responce(400, "")
 
     except Exception as e:
         return http_responce(400, str(e))
