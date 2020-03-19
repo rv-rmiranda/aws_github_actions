@@ -15,7 +15,6 @@ from aws_cdk import (
 
 from cdk_lambda.cdk_lambda_stack import CdkLambdaStack
 from cdk_apigateway.cdk_api_stack import CdkAPIGatewayStack
-from cdk_elasticsearch.cdk_elasticsearch_stack import CdkElasticSearchStack
 from cdk_elasticache.cdk_elasticache_stack import CdkElastiCasheStack
 
 tags = {
