@@ -66,6 +66,6 @@ jobs:
         cdk synth cdk-api
         cdk synth cdk-memcached
 
-        cdk deploy cdk-lambda
+        cdk deploy cdk-lambda -v
 
 # cdk bootstrap aws://065035205697/us-east-1

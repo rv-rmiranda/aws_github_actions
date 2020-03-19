@@ -62,8 +62,6 @@ jobs:
         source .env/bin/activate
         pip3 install -r requirements.txt
 
-        cdk bootstrap aws://065035205697/us-east-1
-
         cdk synth cdk-lambda
         cdk synth cdk-api
         cdk synth cdk-memcached
