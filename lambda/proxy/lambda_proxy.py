@@ -53,7 +53,7 @@ def invoke_lambda(arn:str, data:dict):
         raise e
 
 def get_quadrant_data(params):
-    pass
+    return http_responce(body="No connection Quadrant API")
 
 def get_cached_data(hash_key:str, params):
     try:
@@ -64,7 +64,7 @@ def get_cached_data(hash_key:str, params):
 
         return http_responce(200, json.dumps(responce))
     except Exception as e:
-        return http_responce(400, json.dumps(e))
+        return http_responce(body=json.dumps(e))
 
 def store_data_in_cache(hash_key:str, params):
     try:
@@ -89,7 +89,7 @@ def handler(event, context):
 
         path = event['pathParameters']['proxy']
 
-        if event['body']
+        if event['body']:
             params = json.loads(event['body'])
         else:
             return http_responce(body="Missing body in request")
@@ -108,6 +108,7 @@ def handler(event, context):
                 response = get_quadrant_data(params['args'])
                 if response['statusCode'] == 200:
                     # TODO - Data Format
+                    store_data_in_cache(hash_hey, response['body'])
                     return response
                 
             return response
@@ -124,6 +125,7 @@ def handler(event, context):
                 response = get_quadrant_data(params)
                 if response['statusCode'] == 200:
                     # TODO - Data Format
+                    store_data_in_cache(hash_hey, response['body'])
                     return response
 
         else:
@@ -131,4 +133,26 @@ def handler(event, context):
             return http_responce(body=body)
 
     except Exception as e:
-        http_responce(body=str(e))
+        return http_responce(body=str(e))
+
+
+input = {
+    "httpMethod": "POST",
+    "pathParameters": {
+        "proxy": "auto"
+    },
+    'body': {
+        "args": {
+            "age": 25,
+            "gender": "Male", 
+            "zip_code": 29277
+        },
+        "sort": {
+            "key": "price",
+            "order_by": "DESC"
+        },
+        "limit": 5
+    }
+}
+
+handler(input, "")

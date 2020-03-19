@@ -3,6 +3,8 @@ import time
 import uuid
 import sys
 import socket
+import boto3
+import os
 import elasticache_auto_discovery
 from pymemcache.client.hash import HashClient
 
@@ -37,6 +39,24 @@ def set_elasticache_client(memcached_endpoint:str):
     except Exception as e:
         raise e
 
+def get_elasticache_endpoint(name:str):
+    try:
+        client = boto3.client('elasticache')
+
+        response = client.describe_cache_clusters(
+            CacheClusterId = name
+        )
+
+        if response['ResponseMetadata']['HTTPStatusCode'] == 200:
+            address = response['CacheClusters'][0]['ConfigurationEndpoint']['Address']
+            port    = response['CacheClusters'][0]['ConfigurationEndpoint']['Port']
+
+            return "{0}:{1}".format(address, port)
+        else:
+            raise Exception('Invalid Elasticache ID: {0}'.format(name))
+
+    except Exception as e:
+        raise e
 def handler(event, context):
     """
     This function puts data into memcache.
@@ -44,8 +64,12 @@ def handler(event, context):
     """
 
     try:
+
+        # Getting Elasticache Endpoint:
+        memcache_endpoint = get_elasticache_endpoint(os.environ['ELASTICACHE_ID'])
+
         # Set Memcached Client:
-        memcache_client = set_elasticache_client('cdk-memcache.ygxeqs.cfg.use1.cache.amazonaws.com:6379')
+        memcache_client = set_elasticache_client(memcache_endpoint)
 
         # HashKey:
         hashKey = event['hashKey']

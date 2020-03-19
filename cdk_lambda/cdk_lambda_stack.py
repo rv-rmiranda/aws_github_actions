@@ -43,7 +43,10 @@ class CdkLambdaStack(core.Stack):
             timeout       = core.Duration.seconds(900),
             memory_size   = 1024,
             vpc           = self.exciting_vpc,
-            function_name = 'queryElasticache-{0}'.format('dev')
+            function_name = 'queryElasticache-{0}'.format('dev'),
+            environment   = {
+                'ELASTICACHE_ID': 'cdk-memcache'
+            }
         )
 
         # === Lambda Function Store Elasticache ===
@@ -56,7 +59,10 @@ class CdkLambdaStack(core.Stack):
             timeout       = core.Duration.seconds(900),
             memory_size   = 1024,
             vpc           = self.exciting_vpc,
-            function_name = 'storeElasticache-{0}'.format('dev')
+            function_name = 'storeElasticache-{0}'.format('dev'),
+            environment   = {
+                'ELASTICACHE_ID': 'cdk-memcache'
+            }
         )
 
         # === Lambda Function Proxy ===
