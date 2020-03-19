@@ -8,7 +8,7 @@ with open("README.md") as fp:
 setuptools.setup(
     name="cdk_test",
     version="0.0.1",
-
+    
     description="A sample CDK Python app",
     long_description=long_description,
     long_description_content_type="text/markdown",
@@ -19,15 +19,15 @@ setuptools.setup(
     packages=setuptools.find_packages(where="cdk_test"),
 
     install_requires=[
-        "aws-cdk.core==1.27.0",
-        "aws-cdk.aws_iam==1.27.0",
-        "aws-cdk.aws-lambda==1.27.0",
-        "aws-cdk.aws_sns==1.27.0",
-        "aws-cdk.aws_sns_subscriptions==1.27.0",
-        "aws-cdk.aws_s3==1.27.0",
+        "aws-cdk.core==1.28.0",
+        "aws-cdk.aws_iam==1.28.0",
+        "aws-cdk.aws-lambda==1.28.0",
+        "aws-cdk.aws_sns==1.28.0",
+        "aws-cdk.aws_sns_subscriptions==1.28.0",
+        "aws-cdk.aws_s3==1.28.0",
     ],
 
-    python_requires=">=3.7",
+    python_requires=">=3.8",
 
     classifiers=[
         "Development Status :: 4 - Beta",
@@ -36,7 +36,7 @@ setuptools.setup(
 
         "License :: OSI Approved :: Apache Software License",
 
-        "Programming Language :: JavaScript",
+        "Programming Language :: Python",
         "Programming Language :: Python :: 3 :: Only",
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
